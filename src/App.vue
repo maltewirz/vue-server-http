@@ -11,7 +11,18 @@
                     <label> Mail </label>
                     <input class="form-control" type="text" v-model="user.email">
                 </div>
-                <button class="btn btn-primary" @click="submit()">Submit</button>
+                <button class="btn btn-primary" @click="submit">Submit</button>
+
+                <hr>
+                <button class="btn btn-primary" @click="fetchData">Get Data</button>
+                <ul class="list-group">
+                    <li 
+                        v-for="(user, index) in users" 
+                        :key="index"
+                        class="list-group-item">
+                            {{ user.username }} - {{user.email}}
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -24,17 +35,32 @@
                 user: {
                     username: '',
                     email: ''
-                }
+                },
+                users: []
             };
         },
         methods: {
             submit() {
-                this.$http.post('https://vue-http-8aa8a.firebaseio.com/data.json', this.user) //we have to add data.json for firebase
+                this.$http.post('', this.user) //we have to add data.json for firebase
                     .then(response => {
                         console.log(response);
                     })
                     .catch(err => console.log(err))
-
+            },
+            fetchData() {
+                this.$http.get('')
+                    .then( response => {
+                        return response.json();                        
+                    })
+                    .then(data => {
+                        const resultArray = [];
+                        for (let key in data) {
+                            resultArray.push(data[key]);
+                        }
+                        this.users = resultArray;
+                        console.log(data);
+                    })
+                    .catch(err => console.log(err));
             }
         }
     }
